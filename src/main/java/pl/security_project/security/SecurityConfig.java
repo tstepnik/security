@@ -1,6 +1,9 @@
 package pl.security_project.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.sql.DataSource;
 
 @Configuration
+@EnableAutoConfiguration(
+        exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     DataSource dataSource;
@@ -46,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
                 .jdbcAuthentication()
-                .dataSource(dataSource)
-                .withUser("admin").password("admin").roles("USER");
+                .dataSource(dataSource);
     }
 }
